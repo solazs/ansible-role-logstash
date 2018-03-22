@@ -5,7 +5,7 @@
     state: directory
     owner: logstash
     group: root
-    mode: 0644
+    mode: 0755
   when: logstash_file_output
 
 - name: Create Logstash configuration files from templates.
