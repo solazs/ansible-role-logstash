@@ -1,29 +1,41 @@
 ---
-- name: Create Logstash configuration files.
+- name: Create Logstash file output directory.
+  file: 
+    path: "{{ logstash_file_output_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+  when: logstash_file_output
+
+- name: Create Logstash configuration files from templates.
   template:
     src: "{{ item }}.j2"
     dest: "/etc/logstash/conf.d/{{ item }}"
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - 01-beats-input.conf
-    - 30-elasticsearch-output.conf
+  with_items: "{{ logstash_config_templates }}"
   notify: restart logstash
 
-- name: Create Logstash filters.
+- name: Copy Logstash configuration files.
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ logstash_config_files }}"
+  
+- name: Copy Logstash filters.
   copy:
     src: "filters/{{ item }}"
     dest: "/etc/logstash/conf.d/{{ item }}"
     owner: root
     group: root
     mode: 0644
-  with_items:
-    - 10-syslog.conf
-    - 11-nginx.conf
-    - 12-apache.conf
-    - 14-solr.conf
-    - 15-drupal.conf
+  with_items: "{{ logstash_filter_files }}"
+    
   notify: restart logstash
 
 - name: Create Logstash configuration file for local syslog.

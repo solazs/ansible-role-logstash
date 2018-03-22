@@ -13,5 +13,22 @@ logstash_ssl_key_file: ""
 
 logstash_enabled_on_boot: yes
 
+logstash_file_output: true
+logstash_file_output_dir: /var/log/collected
+
 logstash_install_plugins:
   - logstash-input-beats
+
+logstash_config_templates:
+  - 01-beats-input.conf
+#  - 30-elasticsearch-output.conf
+  - 31-file-output.conf
+
+logstash_config_files: []
+
+logstash_filter_files:
+  - 10-syslog.conf
+  - 11-nginx.conf
+  - 12-apache.conf
+  - 14-solr.conf
+  - 15-drupal.conf
