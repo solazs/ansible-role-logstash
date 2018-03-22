@@ -3,7 +3,7 @@
   file: 
     path: "{{ logstash_file_output_dir }}"
     state: directory
-    owner: root
+    owner: logstash
     group: root
     mode: 0644
   when: logstash_file_output
@@ -12,7 +12,7 @@
   template:
     src: "{{ item }}.j2"
     dest: "/etc/logstash/conf.d/{{ item }}"
-    owner: logstash
+    owner: root
     group: root
     mode: 0644
   with_items: "{{ logstash_config_templates }}"
